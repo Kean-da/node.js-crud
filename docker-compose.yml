@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  app:
+    image: docker-node-app
+    build: ./
+    restart: always
+    environment:
+      NODE_ENV: development
+      MONGO_URL: mongodb://mongo-db:27017/docker-node-app
+      JWT_SECRET: abc123 # you can use any string
+      FRONTEND_URL: http://localhost:5173
+    ports:
+      - 3001:8000 # port 8000 is the port of docker and 3001 is localhost
+    depends_on:
+      - mongo-db  #choose if the version you want to use(mongo version)
+    command: npm start
+
+  #other services/image to store our data  
+  mongo-db:
+    image: mongo:7.0
+    restart: always
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongo-db-data7:/data/db
+
+#to store our data in each different images/mongo version
+volumes:
+  mongo-db-data7: 
